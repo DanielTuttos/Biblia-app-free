@@ -1,98 +1,114 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { ContinueReadingCard } from '@/components/bible/ContinueReadingCard';
+import { DailyReadingCard } from '@/components/bible/DailyReadingCard';
+import { ErrorView, LoadingView } from '@/components/bible/LoadingError';
+import { Screen } from '@/components/screen';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { useResponsiveLayout } from '@/hooks/use-responsive-layout';
+import { getDailyReading } from '@/services/daily-reading';
+import { formatReference, getBooks, getChapter, getVerseText } from '@/services/bible-api';
+import { useBibleStore } from '@/store/bible-store';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const translationId = useBibleStore((s) => s.translationId);
+  const lastReading = useBibleStore((s) => s.lastReading);
+  const { contentContainerStyle } = useResponsiveLayout();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
+  const dailyReading = getDailyReading();
+  const [title, setTitle] = useState(dailyReading.label ?? 'Lectura del día');
+  const [reference, setReference] = useState('');
+  const [preview, setPreview] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadDailyReading = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const booksData = await getBooks(translationId);
+      const book = booksData.books.find((b) => b.id === dailyReading.bookId);
+      if (!book) {
+        throw new Error('No se encontró el libro del día.');
+      }
+
+      const chapterData = await getChapter(translationId, dailyReading.bookId, dailyReading.chapter);
+      const ref = formatReference(
+        book,
+        dailyReading.chapter,
+        dailyReading.verseStart,
+        dailyReading.verseEnd,
+      );
+
+      setTitle(dailyReading.label ?? book.name);
+      setReference(ref);
+
+      const verses = chapterData.chapter.content.filter((v) => v.type === 'verse');
+      const start = dailyReading.verseStart ?? 1;
+      const end = dailyReading.verseEnd ?? Math.min(start + 2, verses.length);
+      const previewVerses = verses.filter((v) => v.number >= start && v.number <= end);
+      const previewText = previewVerses.map((v) => getVerseText(v)).join(' ');
+      setPreview(previewText);
+    } catch {
+      setError('No se pudo cargar la lectura del día. Verifica tu conexión.');
+    } finally {
+      setLoading(false);
+    }
+  }, [translationId, dailyReading]);
+
+  useEffect(() => {
+    void loadDailyReading();
+  }, [loadDailyReading]);
+
+  if (error && !preview) {
+    return (
+      <Screen>
+        <ErrorView message={error} onRetry={loadDailyReading} />
+      </Screen>
+    );
+  }
+
+  return (
+    <Screen>
+      <ScrollView contentContainerStyle={[contentContainerStyle, styles.content]}>
+        <ThemedText type="title" style={styles.heading}>
+          Biblia
         </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        <ThemedText style={styles.subheading}>Palabra de Dios para hoy</ThemedText>
+
+        {lastReading && lastReading.translationId === translationId ? (
+          <ContinueReadingCard reading={lastReading} />
+        ) : null}
+
+        {loading && !preview ? (
+          <LoadingView message="Preparando lectura del día..." />
+        ) : (
+          <DailyReadingCard
+            title={title}
+            reference={reference}
+            preview={preview}
+            reading={dailyReading}
+            loading={loading}
+          />
+        )}
+      </ScrollView>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  content: {
+    paddingTop: 8,
+    gap: 20,
+    paddingBottom: 40,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  heading: {
+    fontFamily: 'Lora-Bold',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  subheading: {
+    opacity: 0.65,
+    marginTop: -12,
+    marginBottom: 4,
   },
 });

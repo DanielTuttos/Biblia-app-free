@@ -1,53 +1,61 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Theme tokens for the Bible app.
  */
 
-import { Platform } from 'react-native';
-
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
-export const Colors = {
+export const ReadingColors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    background: '#FAF8F5',
+    text: '#2C2416',
+    verseNumber: '#B8860B',
+    card: '#FFFFFF',
+    cardBorder: '#E8E0D4',
+    accent: '#B8860B',
+    muted: '#6B6358',
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    background: '#1A1814',
+    text: '#F0EBE3',
+    verseNumber: '#D4A843',
+    card: '#252219',
+    cardBorder: '#3A352C',
+    accent: '#D4A843',
+    muted: '#A89E90',
   },
 };
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+const tintColorLight = ReadingColors.light.accent;
+const tintColorDark = ReadingColors.dark.accent;
+
+export const Colors = {
+  light: {
+    text: ReadingColors.light.text,
+    background: ReadingColors.light.background,
+    tint: tintColorLight,
+    icon: ReadingColors.light.muted,
+    tabIconDefault: ReadingColors.light.muted,
+    tabIconSelected: tintColorLight,
+    card: ReadingColors.light.card,
+    cardBorder: ReadingColors.light.cardBorder,
+    accent: ReadingColors.light.accent,
+    muted: ReadingColors.light.muted,
+    verseNumber: ReadingColors.light.verseNumber,
   },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+  dark: {
+    text: ReadingColors.dark.text,
+    background: ReadingColors.dark.background,
+    tint: tintColorDark,
+    icon: ReadingColors.dark.muted,
+    tabIconDefault: ReadingColors.dark.muted,
+    tabIconSelected: tintColorDark,
+    card: ReadingColors.dark.card,
+    cardBorder: ReadingColors.dark.cardBorder,
+    accent: ReadingColors.dark.accent,
+    muted: ReadingColors.dark.muted,
+    verseNumber: ReadingColors.dark.verseNumber,
   },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-});
+};
+
+export const ReadingTypography = {
+  lineHeightMultiplier: 1.65,
+  verseSpacing: 12,
+};
