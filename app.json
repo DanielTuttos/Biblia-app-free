@@ -13,7 +13,7 @@
       "infoPlist": {
         "UIDesignRequiresCompatibility": true
       },
-      "bundleIdentifier": "com.danielromeroag.biblia"
+      "bundleIdentifier": "com.danielromeroag.bibliafree"
     },
     "android": {
       "adaptiveIcon": {
@@ -24,7 +24,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.danielromeroag.biblia"
+      "package": "com.danielromeroag.bibliafree"
     },
     "web": {
       "output": "static",
