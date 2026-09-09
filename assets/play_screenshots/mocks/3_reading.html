@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lectura - Juan 3</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: Georgia, "Lora", serif;
+    background: #1A1814;
+    color: #F0EBE3;
+    width: 430px;
+    margin: 0 auto;
+    min-height: 932px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .status-bar {
+    height: 54px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 600;
+    color: #F0EBE3;
+    background: #1A1814;
+    font-family: -apple-system, sans-serif;
+  }
+  .status-bar .icons { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px 14px;
+    border-bottom: 1px solid #3A352C;
+    background: #1A1814;
+    font-family: -apple-system, sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .back-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: #252219;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #D4A843;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .header-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #F0EBE3;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: #A89E90;
+    margin-top: 1px;
+  }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .action-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: #252219;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #D4A843;
+    font-size: 18px;
+  }
+  .reading-content {
+    padding: 22px 22px 110px;
+    line-height: 1.65;
+  }
+  .chapter-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #D4A843;
+    margin-bottom: 8px;
+    font-family: Georgia, "Lora", serif;
+  }
+  .chapter-ref {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    color: #A89E90;
+    margin-bottom: 26px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #3A352C;
+  }
+  .verse {
+    margin-bottom: 14px;
+    font-size: 17px;
+    color: #F0EBE3;
+  }
+  .verse-num {
+    font-family: -apple-system, sans-serif;
+    color: #D4A843;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 6px;
+    vertical-align: super;
+  }
+  .verse.highlight {
+    background: rgba(212, 168, 67, 0.10);
+    border-left: 3px solid #D4A843;
+    padding: 12px 16px;
+    margin: 20px -8px;
+    border-radius: 0 10px 10px 0;
+    font-size: 18px;
+    line-height: 1.7;
+  }
+  .verse.highlight .verse-num { font-size: 14px; }
+  .ref-tag {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: -apple-system, sans-serif;
+    font-size: 11px;
+    background: rgba(212, 168, 67, 0.18);
+    color: #D4A843;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 430px;
+    background: rgba(26, 24, 20, 0.96);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid #3A352C;
+    padding: 12px 0 26px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+    font-family: -apple-system, sans-serif;
+  }
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #A89E90;
+    padding: 6px 18px;
+    border-radius: 12px;
+  }
+  .tab-icon { font-size: 22px; }
+  .home-indicator {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 136px;
+    height: 5px;
+    border-radius: 3px;
+    background: #F0EBE3;
+    opacity: 0.3;
+  }
+  .bottom-nav {
+    position: fixed;
+    bottom: 92px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 390px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px;
+    background: rgba(37, 34, 25, 0.95);
+    backdrop-filter: blur(14px);
+    border: 1px solid #3A352C;
+    border-radius: 18px;
+    font-family: -apple-system, sans-serif;
+    z-index: 8;
+  }
+  .nav-btn {
+    color: #D4A843;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .nav-progress {
+    font-size: 12px;
+    color: #A89E90;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>&#128246;</span><span>&#128267;</span><span>&#128267;</span></div>
+  </div>
+
+  <div class="header">
+    <div class="header-left">
+      <div class="back-btn">&#8249;</div>
+      <div>
+        <div class="header-title">Juan</div>
+        <div class="header-sub">Reina Valera 1909 · Español</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="action-btn">&#128269;</div>
+      <div class="action-btn">&#9776;</div>
+    </div>
+  </div>
+
+  <div class="reading-content">
+    <div class="chapter-title">Capítulo 3</div>
+    <div class="chapter-ref">Evangelio según Juan · Capítulo 3 de 21</div>
+
+    <div class="verse">
+      <span class="verse-num">1</span>Había un hombre de los fariseos, llamado Nicodemo, príncipe de los judíos.
+    </div>
+    <div class="verse">
+      <span class="verse-num">2</span>Este vino a Jesús de noche, y le dijo: Rabí, sabemos que has venido de Dios como maestro; porque nadie puede hacer estas señales que tú haces, si no fuere Dios con él.
+    </div>
+    <div class="verse">
+      <span class="verse-num">3</span>Respondió Jesús y le dijo: De cierto, de cierto te digo, que el que no naciere de nuevo, no puede ver el reino de Dios.
+    </div>
+
+    <div class="verse highlight">
+      <span class="verse-num">16</span>Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna.
+      <br><span class="ref-tag">Versículo destacado del día</span>
+    </div>
+
+    <div class="verse">
+      <span class="verse-num">17</span>Porque no envió Dios a su Hijo al mundo para condenar al mundo, sino para que el mundo sea salvo por él.
+    </div>
+    <div class="verse">
+      <span class="verse-num">18</span>El que en él cree, no es condenado; pero el que no cree, ya ha sido condenado, porque no ha creído en el nombre del unigénito Hijo de Dios.
+    </div>
+    <div class="verse">
+      <span class="verse-num">19</span>Y esta es la condenación: que la luz vino al mundo, y los hombres amaron más las tinieblas que la luz, porque sus obras eran malas.
+    </div>
+    <div class="verse">
+      <span class="verse-num">20</span>Porque todo aquel que hace lo malo, aborrece la luz y no viene a la luz, para que sus obras no sean reprendidas.
+    </div>
+    <div class="verse">
+      <span class="verse-num">21</span>Mas el que practica la verdad viene a la luz, para que sea manifiesto que sus obras son hechas en Dios.
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <div class="nav-btn">&#8249; Cap. 2</div>
+    <div class="nav-progress">3 / 21</div>
+    <div class="nav-btn">Cap. 4 &#8250;</div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab"><div class="tab-icon">&#127968;</div><span>Inicio</span></div>
+    <div class="tab"><div class="tab-icon">&#128214;</div><span>Biblia</span></div>
+    <div class="tab"><div class="tab-icon">&#9881;</div><span>Ajustes</span></div>
+  </div>
+  <div class="home-indicator"></div>
+</body>
+</html>

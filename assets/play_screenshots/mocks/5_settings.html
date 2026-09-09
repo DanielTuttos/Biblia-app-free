@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajustes</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #FAF8F5;
+    color: #2C2416;
+    width: 430px;
+    margin: 0 auto;
+    min-height: 932px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  .status-bar {
+    height: 54px;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2C2416;
+    background: #FAF8F5;
+  }
+  .status-bar .icons { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+  .content { padding: 8px 20px 110px; }
+  .title {
+    font-family: Georgia, "Lora", serif;
+    font-size: 34px;
+    font-weight: 700;
+    color: #2C2416;
+    margin-bottom: 14px;
+  }
+  .section { margin-top: 18px; }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #6B6358;
+    margin-bottom: 10px;
+    opacity: 0.85;
+    padding-left: 2px;
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .chip {
+    padding: 9px 16px;
+    border-radius: 20px;
+    background: #FFFFFF;
+    border: 1px solid #E8E0D4;
+    font-size: 14px;
+    color: #2C2416;
+    font-weight: 500;
+  }
+  .chip.selected {
+    background: #B8860B;
+    border-color: #B8860B;
+    color: #FFFFFF;
+    font-weight: 600;
+  }
+  .option {
+    background: #FFFFFF;
+    border: 1px solid #E8E0D4;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 8px;
+  }
+  .option.selected {
+    border: 2px solid #B8860B;
+  }
+  .option .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2C2416;
+    margin-bottom: 4px;
+  }
+  .option .desc {
+    font-size: 13px;
+    color: #6B6358;
+    line-height: 1.5;
+  }
+  .font-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #FFFFFF;
+    border: 1px solid #E8E0D4;
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  .font-btn {
+    width: 48px; height: 48px;
+    border: 1px solid #E8E0D4;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2C2416;
+  }
+  .font-size {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2C2416;
+  }
+  .reminder-card {
+    background: #FFFFFF;
+    border: 1px solid #E8E0D4;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  .reminder-info { flex: 1; }
+  .reminder-info .name {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .reminder-info .desc {
+    font-size: 13px;
+    color: #6B6358;
+    line-height: 1.5;
+  }
+  .switch {
+    width: 52px;
+    height: 32px;
+    background: #B8860B;
+    border-radius: 16px;
+    position: relative;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .switch::after {
+    content: "";
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    width: 28px;
+    height: 28px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+  .time-row {
+    background: #FFFFFF;
+    border: 1px solid #E8E0D4;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 8px;
+  }
+  .time-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2C2416;
+    margin-bottom: 12px;
+  }
+  .time-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .time-part {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .time-btn {
+    width: 40px; height: 40px;
+    border: 1px solid #E8E0D4;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2C2416;
+  }
+  .time-value {
+    font-size: 22px;
+    font-weight: 700;
+    min-width: 38px;
+    text-align: center;
+  }
+  .time-sep {
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .time-scheduled {
+    font-size: 13px;
+    color: #6B6358;
+    text-align: center;
+  }
+  .time-scheduled b { color: #B8860B; }
+  .offline-note {
+    font-size: 13px;
+    color: #6B6358;
+    line-height: 1.55;
+    margin-bottom: 10px;
+    padding: 0 2px;
+  }
+  .offline-note .green { color: #2E7D32; font-weight: 600; }
+  .offline-note .num { color: #B8860B; font-weight: 700; }
+  .tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 430px;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid #E8E0D4;
+    padding: 12px 0 26px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+  }
+  .tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: #6B6358;
+    padding: 6px 18px;
+    border-radius: 12px;
+  }
+  .tab.active { color: #B8860B; font-weight: 600; }
+  .tab-icon { font-size: 22px; }
+  .home-indicator {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 136px;
+    height: 5px;
+    border-radius: 3px;
+    background: #2C2416;
+    opacity: 0.3;
+  }
+</style>
+</head>
+<body>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="icons"><span>&#128246;</span><span>&#128267;</span><span>&#128267;</span></div>
+  </div>
+  <div class="content">
+    <div class="title">Ajustes</div>
+
+    <div class="section">
+      <div class="section-title">Idioma</div>
+      <div class="chip-row">
+        <div class="chip selected">Español</div>
+        <div class="chip">English</div>
+        <div class="chip">Português</div>
+        <div class="chip">Français</div>
+        <div class="chip">Deutsch</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Traducción</div>
+      <div class="option selected">
+        <div class="name">Reina Valera 1909</div>
+        <div class="desc">Dominio público · Español clásico</div>
+      </div>
+      <div class="option">
+        <div class="name">Biblia en Español Sencillo</div>
+        <div class="desc">CC BY · Lenguaje contemporáneo</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Apariencia</div>
+      <div class="chip-row">
+        <div class="chip">Claro</div>
+        <div class="chip">Oscuro</div>
+        <div class="chip selected">Automático</div>
+      </div>
+      <div class="option-desc" style="font-size:13px;color:#6B6358;padding:0 2px;">
+        Automático sigue el tema del sistema operativo.
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tamaño de fuente</div>
+      <div class="font-row">
+        <div class="font-btn">A−</div>
+        <div class="font-size">18 pt</div>
+        <div class="font-btn">A+</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Recordatorio diario</div>
+      <div class="reminder-card">
+        <div class="reminder-info">
+          <div class="name">Lectura del día</div>
+          <div class="desc">Recibe cada mañana el versículo recomendado. Al tocar la notificación irás directo a leerlo.</div>
+        </div>
+        <div class="switch"></div>
+      </div>
+      <div class="time-row">
+        <div class="time-label">Hora del recordatorio</div>
+        <div class="time-controls">
+          <div class="time-part">
+            <div class="time-btn">−</div>
+            <div class="time-value">07</div>
+            <div class="time-btn">+</div>
+          </div>
+          <div class="time-sep">:</div>
+          <div class="time-part">
+            <div class="time-btn">−</div>
+            <div class="time-value">30</div>
+            <div class="time-btn">+</div>
+          </div>
+        </div>
+        <div class="time-scheduled">Programado para las <b>7:30 a. m.</b></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Uso sin conexión</div>
+      <div class="offline-note">
+        <span class="green">✓ Guardada en el dispositivo</span>
+        (<span class="num">31.102 versículos</span>). Puedes leer y buscar sin internet.
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab"><div class="tab-icon">&#127968;</div><span>Inicio</span></div>
+    <div class="tab"><div class="tab-icon">&#128214;</div><span>Biblia</span></div>
+    <div class="tab active"><div class="tab-icon">&#9881;</div><span>Ajustes</span></div>
+  </div>
+  <div class="home-indicator"></div>
+</body>
+</html>
